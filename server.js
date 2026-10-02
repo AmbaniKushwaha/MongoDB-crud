@@ -31,6 +31,7 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+
 app.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -48,19 +49,14 @@ app.post("/signup", async (req, res) => {
         error: "Email is already registered",
       });
     }
-    await  bcrypt.genSalt(10,salt ,(err,res)=> {
-         bcrypt.hash(password,salt, (err,hash)=> {  
-             console.log(hash);
-  });
-  });
+
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
       name,
       email,
       password: hashedPassword,
     });
-
-    // console.log("User created successfully:", email);
 
     res.redirect("/Admin/dashboard");
   } catch (error) {
@@ -71,6 +67,7 @@ app.post("/signup", async (req, res) => {
     });
   }
 });
+
 
 app.get("/login", (req, res) => {
   res.render("login");
